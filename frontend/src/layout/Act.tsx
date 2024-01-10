@@ -5,8 +5,8 @@ import { useState } from "react";
 import { encodeAbiParameters, encodeFunctionData, zeroAddress } from "viem";
 import { useWalletClient } from "wagmi";
 import { useLensHelloWorld } from "../context/LensHelloWorldContext";
-import { publicClient } from "../main";
-import { mode, uiConfig } from "../utils/constants";
+import { defaultClient } from "../main";
+import { chainId, mode, uiConfig } from "../utils/constants";
 import { fetchInitMessage } from "../utils/fetchInitMessage";
 import { lensHubAbi } from "../utils/lensHubAbi";
 import { serializeLink } from "../utils/serializeLink";
@@ -63,9 +63,7 @@ const ActionBox = ({
       });
       setCreateState("PENDING IN MEMPOOL");
       setTxHash(hash);
-      const result = await publicClient({
-        chainId: 80001,
-      }).waitForTransactionReceipt({ hash });
+      const result = await defaultClient().waitForTransactionReceipt({ hash });
       if (result.status === "success") {
         setCreateState("SUCCESS");
         refresh();
@@ -118,9 +116,7 @@ const ActionBox = ({
       });
       setCreateState("PENDING IN MEMPOOL");
       setTxHash(hash);
-      const result = await publicClient({
-        chainId: 80001,
-      }).waitForTransactionReceipt({ hash });
+      const result = await defaultClient().waitForTransactionReceipt({ hash });
       if (result.status === "success") {
         setCreateState("SUCCESS");
         refresh();

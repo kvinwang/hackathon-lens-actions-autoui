@@ -10,8 +10,8 @@ import {
   convertGreetEventToSerializable,
   LoginData,
 } from "../utils/types";
-import { network, uiConfig } from "../utils/constants";
-import { publicClient } from "../main";
+import { uiConfig } from "../utils/constants";
+import { defaultClient } from "../main";
 import { lensHubEventsAbi } from "../utils/lensHubEventsAbi";
 import { helloWorldAbi } from "../utils/helloWorldAbi";
 import { disconnect } from "wagmi/actions";
@@ -34,8 +34,6 @@ export const LensHelloWorldProvider: FC<LensHelloWorldProviderProps> = ({
   const connect = (loginDataParam: LoginData) => {
     setLoginData(loginDataParam);
   };
-
-  const chainId = network === "polygon" ? 137 : 80001;
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -60,9 +58,7 @@ export const LensHelloWorldProvider: FC<LensHelloWorldProviderProps> = ({
       ? parseInt(savedCurrentBlock)
       : uiConfig.openActionContractStartBlock;
 
-    const currentBlock = await publicClient({
-      chainId,
-    }).getBlockNumber();
+    const currentBlock = await defaultClient().getBlockNumber();
 
     const postEventsMap = new Map(
       savedPostEvents.map((event) => [event.transactionHash, event])
@@ -74,9 +70,7 @@ export const LensHelloWorldProvider: FC<LensHelloWorldProviderProps> = ({
     for (let i = startBlock; i < currentBlock; i += 2000) {
       const toBlock = i + 1999 > currentBlock ? currentBlock : i + 1999;
 
-      const postEvents = await publicClient({
-        chainId: network === "polygon" ? 137 : 80001,
-      }).getContractEvents({
+      const postEvents = await defaultClient().getContractEvents({
         address: uiConfig.lensHubProxyAddress,
         abi: lensHubEventsAbi,
         eventName: "PostCreated",
@@ -84,9 +78,7 @@ export const LensHelloWorldProvider: FC<LensHelloWorldProviderProps> = ({
         toBlock: BigInt(toBlock),
       });
 
-      const helloWorldEvents = await publicClient({
-        chainId,
-      }).getContractEvents({
+      const helloWorldEvents = await defaultClient().getContractEvents({
         address: uiConfig.helloWorldContractAddress,
         abi: helloWorldAbi,
         eventName: "Greet",

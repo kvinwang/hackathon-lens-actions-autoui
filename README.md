@@ -1,4 +1,4 @@
-# Lens Hello World Smart Post
+# Lens Smart Post enhanced with Action Market
 
 This repo contains smart contracts and a UI which demonstrates a Lens Smart Post to call a helloWorld() function on an external contract.
 

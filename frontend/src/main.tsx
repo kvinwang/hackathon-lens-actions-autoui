@@ -7,6 +7,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { uiConfig, network } from "./utils/constants.tsx";
 import "./index.css";
 import { publicProvider } from "wagmi/providers/public";
+import { chainId } from "./utils/constants.tsx";
 
 const networkSlug = network === "polygon" ? polygon : polygonMumbai;
 
@@ -21,6 +22,8 @@ export const { publicClient } = configureChains(
     publicProvider(),
   ]
 );
+
+export const defaultClient = () => publicClient({ chainId });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

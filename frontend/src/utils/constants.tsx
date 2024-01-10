@@ -1,4 +1,4 @@
-export const network: string = "polygon"; // options: 'polygon', 'mumbai'
+export const network: string = "mumbai"; // options: 'polygon', 'mumbai'
 
 // mode flag sets whether to fetch smart post instances from Lens API or querying directly from contract events
 // Mumbai open actions are always indexed on the Lens API, Polygon actions need to be allowlisted on the API (though they are permisionless on-chain)
@@ -6,6 +6,8 @@ export const network: string = "polygon"; // options: 'polygon', 'mumbai'
 export const mode: string = "events"; // options: 'api', 'events'
 export const ipfsGateway = "https://ipfs.io/ipfs/";
 export const arweaveGateway = "https://arweave.net/";
+
+export const chainId = network === "polygon" ? 137 : 80001;
 
 interface UiConfig {
   helloWorldContractAddress: `0x${string}`;
@@ -22,9 +24,9 @@ interface UiConfig {
 export const uiConfig: UiConfig =
   network === "polygon"
     ? {
-        helloWorldContractAddress: "0xCAE0AD610762F917E249E26a64ac06bcDE926d9c",
+        helloWorldContractAddress: "0x037688BB658184a97F51Adb71B4ef6Be384B838A",
         helloWorldContractStartBlock: 50547287,
-        openActionContractAddress: "0x7c4fAeef5ba47a437DFBaB57C016c1E706F56fcf",
+        openActionContractAddress: "0x200411A607275040DF5Ef0C4Ef5017E0a6041Ff8",
         openActionContractStartBlock: 50547287,
         lensHubProxyAddress: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
         collectActionContractAddress:
@@ -37,10 +39,10 @@ export const uiConfig: UiConfig =
         }`,
       }
     : {
-        helloWorldContractAddress: "0x4ae4400c4f965F818f3E0b66e9b0ef5721146Bc0",
-        helloWorldContractStartBlock: 42984295,
-        openActionContractAddress: "0x038D178a5aF79fc5BdbB436daA6B9144c669A93F",
-        openActionContractStartBlock: 42984295,
+        helloWorldContractAddress: "0xF5c3C249aD6bC7f17930d9C5edcE5Df18Df57D7f",
+        helloWorldContractStartBlock: 44571969,
+        openActionContractAddress: "0x956095cAa935151073F30DeD8A1b50C6c5995C3F",
+        openActionContractStartBlock: 44571969,
         lensHubProxyAddress: "0x4fbffF20302F3326B20052ab9C217C44F6480900",
         collectActionContractAddress:
           "0x4FdAae7fC16Ef41eAE8d8f6578d575C9d64722f2",
