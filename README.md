@@ -3,7 +3,9 @@
 This repository contains smart contracts and a UI that demonstrates how to dynamically generate a UI for the arguments of Lens Open Action Modules.
 
 ## The problem
+
 Nowadays, when someone develops a new Lens Open Action Module, it's not only required to deploy the action's smart contract on-chain but also to develop and host a UI to enable users to interact with the action. Otherwise, users have no way to interact with the action except by calling it through scripts or using Etherscan. This presents a significant barrier for developers wanting to promote their actions.
+As 1000 Actions need 1000 different frontend websites, it is not only inconvenient for users but also a huge security risks.
 
 Ideally, there should be a standard protocol that allows developers to register their Action Modules somewhere (such as a Kinda Actions Market), publish their metadata, and then well-known frontends such as [Hey](https://testnet.hey.xyz/) should automatically generate UIs for users to interact with the Action Modules.
 
@@ -14,10 +16,13 @@ This repository contains the demo code that demonstrates how the above idea can 
 https://github.com/kvinwang/hackathon-lens-actions-autoui/assets/6442159/51040550-bc89-4869-b6e2-081b876c47a2
 
 ## How it works
+
 When developing a new Open Action Module, one should:
+
 1. Implement the LensModuleMetadata. (It should [already be true](https://github.com/defispartan/lens-hello-world-open-action/blob/master/contracts/src/HelloWorldOpenAction.sol#L11) if following the hello world tutorial)
 2. Make a metadata file for the action according the [doc](https://docs.lens.xyz/docs/module-metadata-standard) and host it somewhere ([here](https://files.kvin.wang:8443/lens-actions-abi/helloworld.json) for example).
 3. Set the metadataURI in the Contract constructor:
+
 ```solidity
     constructor(
         address lensHubProxyContract,
@@ -32,7 +37,6 @@ When developing a new Open Action Module, one should:
 ```
 
 [Here is a deployed example](https://mumbai.polygonscan.com/address/0x200411A607275040DF5Ef0C4Ef5017E0a6041Ff8#readContract#F2)
-
 
 When a user publish a post with actions with this UI, the following steps will be executed:
 
