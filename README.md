@@ -1,130 +1,50 @@
-# Lens Smart Post enhanced with Action Market
+# Lens Smart Post with Automated Action Arguments UI
 
-This repo contains smart contracts and a UI which demonstrates a Lens Smart Post to call a helloWorld() function on an external contract.
+This repository contains smart contracts and a UI that demonstrates how to dynamically generate a UI for the arguments of Lens Open Action Modules.
 
-The Polygon mainnet version of the site is live [here](https://lens-hello-world-open-action.vercel.app/)
+## The problem
+Nowadays, when someone develops a new Lens Open Action Module, it's not only required to deploy the action's smart contract on-chain but also to develop and host a UI to enable users to interact with the action. Otherwise, users have no way to interact with the action except by calling it through scripts or using Etherscan. This presents a significant barrier for developers wanting to promote their actions.
 
+Ideally, there should be a standard protocol that allows developers to register their Action Modules somewhere (such as a Kinda Actions Market), publish their metadata, and then well-known frontends such as [Hey](https://testnet.hey.xyz/) should automatically generate UIs for users to interact with the Action Modules.
 
-- [Integration Guide](#integration-guide)
+This repository contains the demo code that demonstrates how the above idea can be achieved. These features should eventually be implemented by the official Lens frontend.
 
-- [Frontend](#frontend)
+## Demo Video
 
-- [Smart Contracts](#smart-contracts)
+TODO
 
+## How it works
+When developing a new Open Action Module, one should:
+1. Implement the LensModuleMetadata. (It should [already be true](https://github.com/defispartan/lens-hello-world-open-action/blob/master/contracts/src/HelloWorldOpenAction.sol#L11) if following the hello world tutorial)
+2. Make a metadata file for the action according the [doc](https://docs.lens.xyz/docs/module-metadata-standard) and host it somewhere ([here](https://files.kvin.wang:8443/lens-actions-abi/helloworld.json) for example).
+3. Set the metadataURI in the Contract constructor:
+```solidity
+    constructor(
+        address lensHubProxyContract,
+        address helloWorldContract,
+        address moduleOwner
+    ) HubRestricted(lensHubProxyContract) LensModuleMetadata(moduleOwner) {
+        _helloWorld = IHelloWorld(helloWorldContract);
 
-
-## Integration Guide 
-
-The deployed action module addresses are: 
-
-- [Polygon Mainnet](https://polygonscan.com/address/0x7c4fAeef5ba47a437DFBaB57C016c1E706F56fcf)
-
-- [Mumbai Testnet](https://mumbai.polygonscan.com/address/0x038D178a5aF79fc5BdbB436daA6B9144c669A93F) 
-
-
-To integrate this open action, support must be added to create and execute the action.
-
-### Create Post
-
-To create a publication with this action module attached there are two relavent fields:
-
-`actionModules` - array of addresses which should contain module addresses above ^
-
-`actionModuleInitDatas` - array of bytes data, for this action there is one parameter, a string containing an initialize message (which is contained in the Hello World event output)
-
-
-An integration for this action should display an input box for the initialize string and encode it to be passed in the initDatas as follows:
-
-```
-// viem
-const encodedInitDataVIem = encodeAbiParameters(
-    [{ type: "string" }],
-    [initializeString]
-);
-
-// ethers v5
-const encodedInitDataEthers = ethers.utils.defaultAbiCoder.encode(
-    ["string"],
-    [initializeString]
-);
+        // Set the metadataURI to the location of the metadata file
+        metadataURI = "https://files.kvin.wang:8443/lens-actions-abi/helloworld.json";
+    }
 ```
 
-For a complete example of creating a post with this open action module with viem, see [here](https://github.com/defispartan/lens-hello-world-open-action/blob/master/frontend/src/layout/Create.tsx)
+[Here is a deployed example](https://mumbai.polygonscan.com/address/0x200411A607275040DF5Ef0C4Ef5017E0a6041Ff8#readContract#F2)
 
 
+When a user publish a post with actions with this UI, the following steps will be executed:
 
-### Execute
+1. The UI will fetch the list for supported open action modules.
+2. When use enter the Post page , fill in post content and click [Add an Action] button, the UI will ask the contract for the localtion of the action's metadata, download the metadata and generate UI according to the content of `initializeCalldataABI`, where `initializeCalldataABI` is formated in standard solidity JSON ABI format.
+3. When user click [Create] button, the UI will generate the calldata for the action and call the action with the calldata.
 
-A publication with this open action will contain the module address and initialize data from the "Create Post" step contained in it's `postParams` field. To decode the initialize string:
+Note, the registry & metadata hosting are mocked in this demo code.
 
-```
-const index = actionModules.indexOf(openActionContractAddress);
-const actionModuleInitData = post.args.postParams.actionModulesInitDatas[index];
+## How to run the frontend locally
 
-// viem
-const decodedInitializeDataViem = decodeAbiParameters(
-  [
-    { type: 'string' },
-  ],
-  actionModuleInitData,
-)
+To run locally, clone repo, make sure you have yarn installed.
 
-// ethers v5
-const decodedInitializeDataEthers = ethers.utils.defaultAbiCoder.decode(
-    ["string"],
-    actionModuleInitData
-);
-```
-
-To allow users to execute this action, an integration should display the decoded initialize string, an input box for the user to set an action string, and button which trigger the action.
-
-When the button is pressed, `act` should be called on the `LensHub` contract, with relavent fields:
-
-- publicationActedProfileId - Profile ID of action publisher, `args.postParams.profileId`
-
-- publicationActedId - ID of publication with this action attached, `args.pubId`
-
-- actionModuleAddress - module contract address from above
-
-- actionModuleData - bytes data, for this action there is one parameter encoded, a string containing an action message (which is also contained in the Hello World event output)
-
-
-The actionModuleData can be encoded identically to the initializeData.
-
-For a complete example of executing this open action on a publication with viem, see [here](https://github.com/defispartan/lens-hello-world-open-action/blob/master/frontend/src/layout/Act.tsx)
-
-
-
-## Smart Contracts
-
-
-### Polygon Mainnet
-
-[HelloWorld.sol](https://polygonscan.com/address/0xCAE0AD610762F917E249E26a64ac06bcDE926d9c) 
-
-[HelloWorldOpenAction.sol](https://polygonscan.com/address/0x7c4fAeef5ba47a437DFBaB57C016c1E706F56fcf) 
-
-### Mumbai Testnet
-
-[HelloWorld.sol](https://mumbai.polygonscan.com/address/0x4ae4400c4f965F818f3E0b66e9b0ef5721146Bc0) 
-
-[HelloWorldOpenAction.sol](https://mumbai.polygonscan.com/address/0x038D178a5aF79fc5BdbB436daA6B9144c669A93F) 
-
-### To Deploy Your Own
-
-1.) Switch to contracts directory (`cd contracts`) and setup environment variables: copy `.env.example` to `.env`, input deployment values values in `.env`, and run `source .env` (or equivalent on your OS) 
-
-2.) Run script to deploy `HelloWorld.sol` and `HelloWorldOpenAction.sol` to Mumbai: `forge script script/HelloWorld.s.sol:HelloWorldScript --rpc-url INSERT_RPC_HERE --broadcast --verify -vvvv` 
-
-
-## Frontend
-
-Polygon deployment is live @ https://lens-hello-world-open-action.vercel.app/
-
-To run locally, clone repo, switch to frontend directory, make sure you have [bun installed](https://bun.sh/docs/installation) and run `bun install && bun run dev` 
-
-Contract address are configured in `frontend/src/constants.ts` 
-
-The `frontend/src/layout` components `Create`, `Act`, and `Events` contain code to create a post with this action, execute this action on a post, and display HelloWorld.sol events respectively. 
-
-Copy `.env.example` to `.env` in frontend directory, input environment variables, and run `source .env` (or equivalent on your OS).
+1. Switch to frontend directory, copy `.env.example` to `.env`, input environment variables, and run `source .env` (or equivalent on your OS).
+2. Run `yarn && yarn dev`
