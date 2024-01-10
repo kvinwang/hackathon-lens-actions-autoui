@@ -11,7 +11,7 @@ This repository contains the demo code that demonstrates how the above idea can 
 
 ## Demo Video
 
-TODO
+https://github.com/kvinwang/hackathon-lens-actions-autoui/assets/6442159/51040550-bc89-4869-b6e2-081b876c47a2
 
 ## How it works
 When developing a new Open Action Module, one should:
