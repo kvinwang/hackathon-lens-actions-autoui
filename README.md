@@ -4,8 +4,13 @@ This repository contains smart contracts and a UI that demonstrates how to dynam
 
 ## The problem
 
-Nowadays, when someone develops a new Lens Open Action Module, it's not only required to deploy the action's smart contract on-chain but also to develop and host a UI to enable users to interact with the action. Otherwise, users have no way to interact with the action except by calling it through scripts or using Etherscan. This presents a significant barrier for developers wanting to promote their actions.
-As 1000 Actions need 1000 different frontend websites, it is not only inconvenient for users but also a huge security risks.
+Nowadays, when someone develops a new Lens Open Action Module, they are not only required to deploy the action's smart contract on-chain but also have to develop and host a UI that enables interaction with the action. Without this UI, users are limited to script-based interactions or using polygonscan, which is not user-friendly. This poses a considerable barrier for developers who wish to promote their actions.
+
+The problems can be summarized as follows:
+
+- Developers are forced to develop a UI for their actions, which is additional, unnecessary work.
+- Developers need to host the UI for their actions themselves, incurring extra costs for maintenance and promotion.
+- End users won't use these third-party UIs due to inconvenience and security concerns.
 
 Ideally, there should be a standard protocol that allows developers to register their Action Modules somewhere (such as a Kinda Actions Market), publish their metadata, and then well-known frontends such as [Hey](https://testnet.hey.xyz/) should automatically generate UIs for users to interact with the Action Modules.
 
